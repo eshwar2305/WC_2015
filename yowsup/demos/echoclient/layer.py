@@ -5,7 +5,7 @@ from yowsup.layers.protocol_receipts.protocolentities  import OutgoingReceiptPro
 from yowsup.layers.protocol_media.protocolentities  import LocationMediaMessageProtocolEntity
 from yowsup.layers.protocol_acks.protocolentities      import OutgoingAckProtocolEntity
 from yowsup.layers.protocol_media.protocolentities  import VCardMediaMessageProtocolEntity
-
+import os,datetime
 
 class EchoLayer(YowInterfaceLayer):
 
@@ -30,11 +30,19 @@ class EchoLayer(YowInterfaceLayer):
             messageProtocolEntity.getBody(),
             to = messageProtocolEntity.getFrom())
 
-        print("Echoing %s to %s" % (messageProtocolEntity.getBody(), messageProtocolEntity.getFrom(False)))
-
+        formattedDate = datetime.datetime.fromtimestamp(messageProtocolEntity.getTimestamp()).strftime('%d-%m-%Y %H:%M')
+        script_dir = os.getcwd()
+        rel_path = "out.txt"
+        abs_file_path = os.path.join(script_dir,rel_path)
+        f = open(abs_file_path,'a')
+        msgData = messageProtocolEntity.getBody().replace("\n","")
+        f.write("%s [%s]:%s \n" % (messageProtocolEntity.getFrom(False),formattedDate, msgData))
+        f.close()
+        print("%s [%s]:%s \n" % (messageProtocolEntity.getFrom(False),formattedDate,msgData))
+        
         #send receipt otherwise we keep receiving the same message over and over
         self.toLower(receipt)
-        self.toLower(outgoingMessageProtocolEntity)
+        #self.toLower(outgoingMessageProtocolEntity)
 
     def onMediaMessage(self, messageProtocolEntity):
         if messageProtocolEntity.getMediaType() == "image":

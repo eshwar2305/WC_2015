@@ -47,7 +47,9 @@ class YowsupEchoStack(object):
 
     def start(self):
         self.stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))
+        print("Starting")
         try:
-            self.stack.loop()
+            self.stack.loop(timeout = 0.5, discrete = 0.5)
+            print("bye")
         except AuthError as e:
             print("Authentication Error: %s" % e.message)
