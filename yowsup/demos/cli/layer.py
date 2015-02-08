@@ -380,11 +380,23 @@ class YowsupCliLayer(Cli, YowInterfaceLayer):
             MESSAGE_ID = message.getId()
             )
 
-        self.output(output, tag = None, prompt = not self.sendReceipts)
+        #self.output(output, tag = None, prompt = not self.sendReceipts)
+        
+        script_dir = os.getcwd()
+        rel_path = "out.txt"
+        abs_file_path = os.path.join(script_dir,rel_path)
+        f = open(abs_file_path,'a')
+        msgData = message.getBody().replace("\n","")
+        number = message.getFrom()[:12]
+        number = number.replace("-","@")
+        f.write("%s [%s]:%s \n" % (number,formattedDate, msgData))
+        f.close()
+        print("%s [%s]:%s" % (number,formattedDate,msgData))
+        
         if self.sendReceipts:
             receipt = OutgoingReceiptProtocolEntity(message.getId(), message.getFrom())
             self.toLower(receipt)
-            self.output("Sent delivered receipt", tag = "Message %s" % message.getId())
+            #self.output("Sent delivered receipt", tag = "Message %s" % message.getId())
 
 
     def getTextMessageBody(self, message):
