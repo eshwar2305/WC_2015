@@ -12,11 +12,11 @@ class EchoLayer(YowInterfaceLayer):
     @ProtocolEntityCallback("message")
     def onMessage(self, messageProtocolEntity):
 
-        if not messageProtocolEntity.isGroupMessage():
-            if messageProtocolEntity.getType() == 'text':
-                self.onTextMessage(messageProtocolEntity)
-            elif messageProtocolEntity.getType() == 'media':
-                self.onMediaMessage(messageProtocolEntity)
+        #if not messageProtocolEntity.isGroupMessage():
+        if messageProtocolEntity.getType() == 'text':
+            self.onTextMessage(messageProtocolEntity)
+        elif messageProtocolEntity.getType() == 'media':
+            self.onMediaMessage(messageProtocolEntity)
     
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
@@ -38,7 +38,7 @@ class EchoLayer(YowInterfaceLayer):
         msgData = messageProtocolEntity.getBody().replace("\n","")
         f.write("%s [%s]:%s \n" % (messageProtocolEntity.getFrom(False),formattedDate, msgData))
         f.close()
-        print("%s [%s]:%s \n" % (messageProtocolEntity.getFrom(False),formattedDate,msgData))
+        print("%s [%s]:%s" % (messageProtocolEntity.getFrom(False),formattedDate,msgData))
         
         #send receipt otherwise we keep receiving the same message over and over
         self.toLower(receipt)
